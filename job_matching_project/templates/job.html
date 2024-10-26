@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Matches</title>
+    <link rel="stylesheet" href="job.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+    <div class="container">
+        <div class="content-box">
+            <h1>Job Matches</h1>
+            <div class="description-box">
+                <p>
+                    Job Matches connects you with relevant employment opportunities based on your skills and experience. 
+                    Upload your resume to find jobs that suit your profile and enhance your career growth.
+                </p>
+            </div>
+            <div class="form-section">
+                <div class="profile-container">
+                    <h1>Upload Your Resume</h1>
+                    <!-- Profile Form -->
+                    <form id="upload-form" enctype="multipart/form-data">
+                        <label for="resume-upload">Choose File:</label>
+                        <input type="file" id="resume-upload" name="resume" accept=".pdf,.doc,.docx" required>
+                        <button type="submit" class="btn">Find Best Job Matches For You</button>
+                    </form>
+                </div>
+            </div>
+            <div id="job-results"></div> <!-- Container for displaying job matches -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("upload-form").addEventListener("submit", async function (e) {
+            e.preventDefault(); // Prevent default form submission
+            const formData = new FormData();
+            formData.append("resume", document.getElementById("resume-upload").files[0]); // Ensure this matches the input field's name
+
+            const response = await fetch("/", {
+                method: "POST",
+                body: formData
+            });
+
+            if (!response.ok) {
+                alert("Failed to find job matches. Please try again.");
+                return;
+            }
+
+            const jobs = await response.json(); // Get job matches from the server
+            
+            // Store the jobs data temporarily, e.g., in sessionStorage
+            sessionStorage.setItem('jobResults', JSON.stringify(jobs));
+
+            // Redirect to the home page
+            window.location.href = "http://127.0.0.1:5000/";
+        });
+    </script>
+</body>
+</html>
